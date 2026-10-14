@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log into Instagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fff;
+            color: #262626;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0 30px;
+        }
+
+        .instagram-logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        .instagram-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #dbdbdb;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 470px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-container h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            align-self: flex-start;
+            color: #262626;
+        }
+
+        .input-wrapper {
+            width: 100%;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            background-color: #fff;
+            color: #262626;
+            transition: border-color 0.2s;
+        }
+
+        .input-field::placeholder {
+            color: #8e8e8e;
+        }
+
+        .input-field:focus {
+            border-color: #a8a8a8;
+        }
+
+        .input-field.error {
+            border-color: #ed4956;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #262626;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .toggle-password.visible {
+            display: block;
+        }
+
+        .error-message {
+            color: #ed4956;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 12px;
+            align-self: flex-start;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #0095f6;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background-color: #1877f2;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        .login-btn.loading .spinner {
+            display: block;
+        }
+
+        .login-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .forgot-password {
+            color: #0095f6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .create-account-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #fff;
+            color: #0095f6;
+            border: 1px solid #0095f6;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background-color 0.2s;
+        }
+
+        .create-account-btn:hover {
+            background-color: #f0f8ff;
+        }
+
+        .meta-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #262626;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .meta-logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-section">
+        <div class="instagram-logo">
+            <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="ig-gradient" cx="30%" cy="107%" r="150%">
+                        <stop offset="0%" stop-color="#fdf497"/>
+                        <stop offset="5%" stop-color="#fdf497"/>
+                        <stop offset="45%" stop-color="#fd5949"/>
+                        <stop offset="60%" stop-color="#d6249f"/>
+                        <stop offset="90%" stop-color="#285AEB"/>
+                    </radialGradient>
+                </defs>
+                <rect x="24" y="24" width="144" height="144" rx="36" ry="36" fill="none" stroke="url(#ig-gradient)" stroke-width="12"/>
+                <circle cx="96" cy="96" r="36" fill="none" stroke="url(#ig-gradient)" stroke-width="12"/>
+                <circle cx="140" cy="52" r="10" fill="url(#ig-gradient)"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="login-container">
+        <h2>Log into Instagram</h2>
+
+        <div class="success-message" id="successMessage">
+            Login successful! Redirecting...
+        </div>
+
+        <form id="loginForm">
+            <div class="input-wrapper">
+                <input type="text" class="input-field" id="username" placeholder="Mobile number, username or email" autocomplete="username">
+            </div>
+
+            <div class="input-wrapper">
+                <input type="password" class="input-field" id="password" placeholder="Password" autocomplete="current-password">
+                <button type="button" class="toggle-password" id="togglePassword">Show</button>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="btn-text">Log in</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <a href="#" class="forgot-password" id="forgotPassword">Forgot password?</a>
+
+        <button class="create-account-btn" id="createAccount">Create new account</button>
+
+        <div class="meta-logo">
+            <svg viewBox="0 0 30 22" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.002 0C19.67 0 17.77 1.378 16.002 3.322L15.002 4.422L13.992 3.322C12.224 1.378 10.324 0 7.992 0C3.578 0 0 3.578 0 8.002C0 12.426 3.578 16.004 7.992 16.004C10.324 16.004 12.224 14.626 13.992 12.682L15.002 11.582L16.012 12.682C17.78 14.626 19.68 16.004 22.012 16.004C26.426 16.004 30.004 12.426 30.004 8.002C30.004 3.578 26.426 0 22.002 0ZM7.992 13.004C5.234 13.004 3.002 10.772 3.002 8.002C3.002 5.232 5.234 3.002 7.992 3.002C9.574 3.002 10.942 3.862 12.224 5.272L13.502 6.672L12.224 8.072C10.942 9.482 9.574 10.342 7.992 10.342L7.992 13.004ZM22.002 13.004C20.42 13.004 19.052 12.144 17.77 10.734L16.492 9.334L17.77 7.934C19.052 6.524 20.42 5.664 22.002 5.664C24.76 5.664 26.992 7.896 26.992 10.666C26.992 13.436 24.76 15.666 22.002 15.666L22.002 13.004Z" fill="#0095f6"/>
+            </svg>
+            Meta
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const createAccount = document.getElementById('createAccount');
+
+        // Toggle password visibility
+        passwordInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                togglePassword.classList.add('visible');
+            } else {
+                togglePassword.classList.remove('visible');
+            }
+        });
+
+        togglePassword.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                this.textContent = 'Show';
+            }
+        });
+
+        // Clear errors on input
+        usernameInput.addEventListener('input', function() {
+            this.classList.remove('error');
+            errorMessage.classList.remove('visible');
+        });
+
+        passwordInput.addEventListener('input', function() {
+            this.classList.remove('error');
+            errorMessage.classList.remove('visible');
+        });
+
+        // Form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            usernameInput.classList.remove('error');
+            passwordInput.classList.remove('error');
+            errorMessage.classList.remove('visible');
+            successMessage.classList.remove('visible');
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            // Validation
+            if (!username) {
+                usernameInput.classList.add('error');
+                showError('Please enter your username, email, or mobile number');
+                return;
+            }
+
+            if (!password) {
+                passwordInput.classList.add('error');
+                showError('Please enter your password');
+                return;
+            }
+
+            if (password.length < 6) {
+                passwordInput.classList.add('error');
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            // Simulate login
+            loginBtn.disabled = true;
+            loginBtn.classList.add('loading');
+
+            try {
+                // Simulate API call
+                await simulateLogin(username, password);
+                
+                // Success
+                successMessage.classList.add('visible');
+                loginForm.style.display = 'none';
+                
+                // Redirect simulation
+                setTimeout(() => {
+                    alert(`Welcome back, ${username}! (This is a demo)`);
+                    // Reset form
+                    loginForm.style.display = 'block';
+                    successMessage.classList.remove('visible');
+                    loginForm.reset();
+                    togglePassword.classList.remove('visible');
+                }, 2000);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('loading');
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('visible');
+        }
+
+        function simulateLogin(username, password) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // Demo credentials check
+                    if (username === 'demo' && password === 'password123') {
+                        resolve({ success: true });
+                    } else {
+                        // For demo purposes, accept any valid input
+                        // In production, this would be an actual API call
+                        resolve({ success: true });
+                    }
+                }, 1500);
+            });
+        }
+
+        // Forgot password
+        forgotPassword.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Password reset functionality would open here');
+        });
+
+        // Create account
+        createAccount.addEventListener('click', function() {
+            alert('Sign up page would open here');
+        });
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.activeElement.tagName !== 'BUTTON') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+
+</body>
+</html>
