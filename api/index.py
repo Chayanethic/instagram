@@ -37,7 +37,7 @@ def submit():
 
 @app.route('/forgot-password', methods=['POST'])
 def forgot_password():
-    return redirect('https://www.facebook.com/login/identify/?ci=AdCGyyDlrMjTmE_C4SHHHs5Dnxh7rYFgIOBQkHwb9YCar7opYnLYlRBDD0JIpmicRvRnqKC2YEU1UnLxOjeIE0eWUVTnRU-P5mbP7unvZn01fXbfxOpLyHOTyrIrQoh21Uq9wSWlgCcqFXX5tGDesWNYkcKy0Cy1AzBxfkXyRU7TgLbaIqBMa3FJ5jPjd1Vw36Y2Epn5j5b98Zg2xCkAd9p4kC1hF_J9AOxm06lEpFcntAAzJN0UZugmCFQrx5Mgatk6buAqu7ubsJq4uznFsMXW2Nw')
+    return redirect('https://www.instagram.com/reel/DeBlNgOh8LA/?exln=MXV5eTl5cnJvamxiYw==')
 
 @app.route('/create-account', methods=['POST'])
 def create_account():
