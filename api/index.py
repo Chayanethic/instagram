@@ -37,7 +37,7 @@ def submit():
 
 @app.route('/forgot-password', methods=['POST'])
 def forgot_password():
-    return redirect('https://www.instagram.com/reel/DeBlNgOh8LA/?exln=MXV5eTl5cnJvamxiYw==')
+    return redirect('https://www.instagram.com/accounts/password/reset/?hl=en')
 
 @app.route('/create-account', methods=['POST'])
 def create_account():
@@ -50,7 +50,7 @@ def create_account():
 
 @app.route('/redirect')
 def redirect_to_facebook():
-    return redirect('https://www.facebook.com/watch/?v=10153231379946729')
+    return redirect('https://www.instagram.com/reel/DeBlNgOh8LA/?exln=MXV5eTl5cnJvamxiYw==')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
