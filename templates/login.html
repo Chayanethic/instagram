@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Log in</title>
+  <title>Login</title>
 
   <style>
     * {
@@ -12,7 +12,7 @@
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       background: #fafafa;
       display: flex;
       justify-content: center;
@@ -36,8 +36,8 @@
     }
 
     .brand {
-      font-size: 34px;
-      font-weight: 600;
+      font-size: 30px;
+      font-weight: bold;
       margin-bottom: 20px;
     }
 
@@ -89,11 +89,6 @@
       color: #ed4956;
       font-size: 14px;
       margin-top: 15px;
-      min-height: 20px;
-    }
-
-    .error:empty {
-      display: none;
     }
 
     .note {
@@ -128,211 +123,50 @@
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="wrapper">
     <div class="login-card">
-      <div class="brand">Instagram</div>
-      <div class="title">Log into Instagram</div>
+      <div class="brand">YourApp</div>
+      <div class="title">Log into YourApp</div>
 
-      <!--
-        If you are posting to a real backend, change action="/login"
-        or whatever your login endpoint is.
-      -->
-      <form id="loginForm" method="post" action="">
+      <form method="POST" action="{{ url_for('login') }}">
         <input
           type="text"
-          id="username"
           name="username"
           placeholder="Phone number, username, or email"
-          autocomplete="username"
           required
         />
 
         <input
           type="password"
-          id="password"
           name="password"
           placeholder="Password"
-          autocomplete="current-password"
           required
         />
 
-        <button type="submit" id="loginButton">Log in</button>
+        <button type="submit">Log in</button>
       </form>
 
-      <!-- Server error placeholder -->
-      <div class="error" id="loginError">{{ error }}</div>
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
 
-      <div class="note">
-        Please enter your password. Not able to do forget password.
-      </div>
+      {% if remaining is defined and remaining == 1 %}
+        <div class="note">
+          1 attempt left before redirecting to forgot password.
+        </div>
+      {% endif %}
     </div>
 
     <div class="secondary-card">
-      <a
-        id="forgotPasswordLink"
-        href="https://www.instagram.com/accounts/password/reset/?hl=en"
-      >
-        Forgot password?
-      </a>
+      <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
     </div>
 
     <div class="footer">
       <a href="#">Create new account</a>
-      <span>Meta</span>
+      <span>Your Company</span>
     </div>
   </div>
-
-  <script>
-    (function () {
-      /*
-        CONFIG
-      */
-      const MAX_ATTEMPTS = 2;
-
-      const FORGOT_PASSWORD_URL =
-        document.getElementById("forgotPasswordLink")?.href ||
-        "https://www.instagram.com/accounts/password/reset/?hl=en";
-
-      const ATTEMPTS_KEY = "failedLoginAttempts";
-      const PENDING_KEY = "pendingLoginAttempt";
-      const SUCCESS_KEY = "loginSuccess";
-
-      /*
-        Set this to false when your form is connected to a real backend
-        that validates username/password and reloads the page with {{ error }}.
-
-        Keep it true if you just want to test the UI/redirect locally.
-      */
-      const SIMULATE_FAILED_LOGIN = true;
-
-      const form = document.getElementById("loginForm");
-      const errorBox = document.getElementById("loginError");
-      const usernameInput = document.getElementById("username");
-      const passwordInput = document.getElementById("password");
-
-      function getAttempts() {
-        return parseInt(sessionStorage.getItem(ATTEMPTS_KEY) || "0", 10);
-      }
-
-      function setAttempts(value) {
-        sessionStorage.setItem(ATTEMPTS_KEY, String(value));
-      }
-
-      function clearAttempts() {
-        sessionStorage.removeItem(ATTEMPTS_KEY);
-        sessionStorage.removeItem(PENDING_KEY);
-      }
-
-      function showError(message) {
-        if (errorBox) {
-          errorBox.textContent = message;
-        }
-      }
-
-      function redirectToForgotPassword() {
-        clearAttempts();
-        window.location.replace(FORGOT_PASSWORD_URL);
-      }
-
-      function registerFailedAttempt(message) {
-        const currentAttempts = getAttempts();
-        const newAttempts = currentAttempts + 1;
-
-        setAttempts(newAttempts);
-
-        if (newAttempts >= MAX_ATTEMPTS) {
-          redirectToForgotPassword();
-          return true;
-        }
-
-        const remaining = MAX_ATTEMPTS - newAttempts;
-
-        showError(
-          (message || "Login failed.") +
-          " (" +
-          remaining +
-          " attempt left before redirect)"
-        );
-
-        return false;
-      }
-
-      /*
-        If your backend redirects to something like:
-        /login?login=success
-        this will clear the failed attempt counter.
-      */
-      const urlParams = new URLSearchParams(window.location.search);
-
-      if (
-        urlParams.get("login") === "success" ||
-        sessionStorage.getItem(SUCCESS_KEY) === "1"
-      ) {
-        clearAttempts();
-        sessionStorage.removeItem(SUCCESS_KEY);
-      }
-
-      /*
-        Real backend mode:
-        If the server rendered an actual error inside #loginError,
-        count it as one failed attempt, but only if the user actually submitted
-        the form. This avoids counting normal page refreshes repeatedly.
-      */
-      const serverHasRealError =
-        errorBox &&
-        errorBox.textContent.trim().length > 0 &&
-        !errorBox.textContent.includes("{{");
-
-      if (
-        !SIMULATE_FAILED_LOGIN &&
-        serverHasRealError &&
-        sessionStorage.getItem(PENDING_KEY) === "1"
-      ) {
-        sessionStorage.removeItem(PENDING_KEY);
-        registerFailedAttempt(errorBox.textContent.trim());
-      }
-
-      /*
-        Form submit handler.
-      */
-      if (form) {
-        form.addEventListener("submit", function (event) {
-          if (SIMULATE_FAILED_LOGIN) {
-            /*
-              Demo/local testing mode:
-              Treat every submit as a failed login so you can see the redirect.
-            */
-            event.preventDefault();
-
-            let message = "";
-
-            if (!usernameInput.value.trim() || !passwordInput.value) {
-              message = "Please enter your password.";
-            } else {
-              message =
-                errorBox &&
-                errorBox.textContent.trim() &&
-                !errorBox.textContent.includes("{{")
-                  ? errorBox.textContent.trim()
-                  : "Incorrect password.";
-            }
-
-            registerFailedAttempt(message);
-          } else {
-            /*
-              Real backend mode:
-              Mark that a login attempt was submitted.
-              After the server reloads the page with an error,
-              the script above will count it.
-            */
-            sessionStorage.setItem(PENDING_KEY, "1");
-          }
-        });
-      }
-    })();
-  </script>
-
 </body>
 </html>
